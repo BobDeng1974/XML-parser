@@ -9,6 +9,17 @@
 #define XML_NODE 1
 #define XML_VALUE 2
 
+class XValue : public std::string
+{
+public:
+    XValue();
+    XValue(const std::string& str);
+    XValue& operator=(const std::string& str);
+
+    std::vector<float> toFloatVector() const;
+    std::vector<int> toIntegerVector() const;
+};
+
 class XAttrib
 {
 public:
@@ -31,7 +42,7 @@ public:
     XNode* parent;
 
     std::string name;
-    std::string value;
+    XValue value;
     std::vector<XAttrib> attributes;
     std::vector<XNode> children;
 
@@ -51,6 +62,6 @@ private:
 
 public:
     XFILE(const char* str); // read the file into the node heirchy
-    XNode* getRoot();
+    const XNode* getRoot();
     ~XFILE();
 };

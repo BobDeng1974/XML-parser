@@ -24,6 +24,21 @@ int main()
     printf("\n\n\n\n\n\n\n\n");
     printNodeTree(root->findNodeByAttribute("node", "id", "Armature"), 0);
 
+    printf("\n");
+    printf("%s\n", root->findNode("library_effects")->children[0].findAttribute("id")->value.c_str());
+    printf("%s\n", root->findNode("library_effects")->children[0].findNode("diffuse")->findNode("color")->value.c_str());
+
+    std::vector<float> array = root->findNode("library_effects")->children[0].findNode("diffuse")->findNode("color")->value.toFloatVector();
+    for(unsigned int i = 0; i < array.size(); i++)
+        printf("%f ", array[i]);
+    printf("\n");
+
+
+    std::vector<int> i_array = root->findNode("library_animations")->findNodeByAttribute("source", "id", "Armature_Bone_pose_matrix-output")->findNode("float_array")->value.toIntegerVector();
+    for(unsigned int i = 0; i < i_array.size(); i++)
+        printf("%i ", i_array[i]);
+    printf("\n");
+
     delete root;
     return 0;
 }

@@ -1,5 +1,60 @@
 #include "XML.h"
 
+/************************************************************************************************************************************************/
+
+XValue::XValue(){}
+
+XValue::XValue(const std::string& str) : std::string(str) {}
+
+XValue& XValue::operator=(const std::string& str) {
+    this->assign(str);
+    return *this;
+}
+
+std::vector<float> XValue::toFloatVector() const
+{
+    std::string buffer = "";
+    std::vector<float> array;
+
+    for(unsigned int i = 0; i < this->length(); i++)
+    {
+        int acsii = (int) this->at(i);
+        buffer += (char) acsii;
+
+        if(acsii == 32 || i == this->length() - 1)
+        {
+            float f = atof(buffer.c_str());
+            array.push_back(f);
+            buffer.clear();
+        }
+    }
+
+    return array;
+}
+
+std::vector<int> XValue::toIntegerVector() const
+{
+    std::string buffer = "";
+    std::vector<int> array;
+
+    for(unsigned int i = 0; i < this->length(); i++)
+    {
+        int acsii = (int) this->at(i);
+        buffer += (char) acsii;
+
+        if(acsii == 32 || i == this->length() - 1)
+        {
+            float f = atoi(buffer.c_str());
+            array.push_back(f);
+            buffer.clear();
+        }
+    }
+
+    return array;
+}
+
+/************************************************************************************************************************************************/
+
 XAttrib::XAttrib(){}
 
 XAttrib::XAttrib(const std::string& str)
@@ -150,7 +205,7 @@ XFILE::XFILE(const char* str) // read the file into the node heirchy
     }
 }
 
-XNode* XFILE::getRoot()
+const XNode* XFILE::getRoot()
 {
     XNode* root = new XNode();
     XNode* current = root;
