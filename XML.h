@@ -35,8 +35,8 @@ public:
 class XNode
 {
 private:
-    const XNode* _findNode(const char* node_name) const;
-    const XNode* _findNodeByAttribute(const char* node_name, const char* attrib_name, const char* attrib_value) const;
+    const XNode* _getNode(const char* node_name) const;
+    const XNode* _getNodeByAttribute(const char* node_name, const char* attrib_name, const char* attrib_value) const;
 
 public:
     XNode* parent;
@@ -48,9 +48,9 @@ public:
 
     XNode();
     void print() const; // print the string representation in the format: name: value ...attributes...
-    const XNode& findNode(const char* name) const;
-    const XAttrib& findAttribute(const char* name) const;
-    const XNode& findNodeByAttribute(const char* node_name, const char* attrib_name, const char* attrib_value) const;
+    const XNode& getNode(const char* name) const;
+    const XAttrib& getAttribute(const char* name) const;
+    const XNode& getNodeByAttribute(const char* node_name, const char* attrib_name, const char* attrib_value) const;
 };
 
 class XFILE

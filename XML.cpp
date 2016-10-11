@@ -76,21 +76,21 @@ std::string XAttrib::toString() const {
 
 /************************************************************************************************************************************************/
 
-const XNode* XNode::_findNode(const char* node_name) const
+const XNode* XNode::_getNode(const char* node_name) const
 {
     if(strcmp(node_name, this->name.c_str()) == 0)
         return this;
 
     for(unsigned int i = 0; i < this->children.size(); i++)
     {
-        const XNode* res = this->children.at(i)._findNode(node_name);
+        const XNode* res = this->children.at(i)._getNode(node_name);
         if(res != NULL) return res;
     }
 
     return NULL;
 }
 
-const XNode* XNode::_findNodeByAttribute(const char* node_name, const char* attrib_name, const char* attrib_value) const
+const XNode* XNode::_getNodeByAttribute(const char* node_name, const char* attrib_name, const char* attrib_value) const
 {
     if(node_name == NULL || strcmp(node_name, this->name.c_str()) == 0)
     {
@@ -108,7 +108,7 @@ const XNode* XNode::_findNodeByAttribute(const char* node_name, const char* attr
 
     for(unsigned int i = 0; i < this->children.size(); i++)
     {
-        const XNode* res = this->children.at(i)._findNodeByAttribute(node_name, attrib_name, attrib_value);
+        const XNode* res = this->children.at(i)._getNodeByAttribute(node_name, attrib_name, attrib_value);
         if(res != NULL) return res;
     }
 
@@ -132,9 +132,9 @@ void XNode::print() const // print the string representation in the format: name
     printf("\n");
 }
 
-const XNode& XNode::findNode(const char* name) const
+const XNode& XNode::getNode(const char* name) const
 {
-    const XNode* res = this->_findNode(name);
+    const XNode* res = this->_getNode(name);
     if(!res)
     {
         printf("Error: Node [%s] not found.", name);
@@ -143,7 +143,7 @@ const XNode& XNode::findNode(const char* name) const
     return *res;
 }
 
-const XAttrib& XNode::findAttribute(const char* name) const
+const XAttrib& XNode::getAttribute(const char* name) const
 {
     for(unsigned int i = 0; i < this->attributes.size(); i++)
     {
@@ -154,9 +154,9 @@ const XAttrib& XNode::findAttribute(const char* name) const
     throw -1;
 }
 
-const XNode& XNode::findNodeByAttribute(const char* node_name, const char* attrib_name, const char* attrib_value) const
+const XNode& XNode::getNodeByAttribute(const char* node_name, const char* attrib_name, const char* attrib_value) const
 {
-    const XNode* res = this->_findNodeByAttribute(node_name, attrib_name, attrib_value);
+    const XNode* res = this->_getNodeByAttribute(node_name, attrib_name, attrib_value);
     if(!res) {
         printf("Warning: Node with ");
         if(node_name != NULL) printf("name \"%s\" and ", node_name);
