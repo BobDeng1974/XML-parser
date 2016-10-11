@@ -17,6 +17,7 @@ public:
 
     XAttrib();
     XAttrib(const std::string& str);
+    XAttrib(const char* _name, const char* _value);
     std::string toString() const;
 };
 
@@ -24,6 +25,7 @@ class XNode
 {
 private:
     const XNode* _findNode(const char* node_name) const;
+    const XNode* _findNodeByAttribute(const char* node_name, const char* attrib_name, const char* attrib_value) const;
 
 public:
     XNode* parent;
@@ -37,6 +39,7 @@ public:
     void print() const; // print the string representation in the format: name: value ...attributes...
     const XNode* findNode(const char* name) const;
     const XAttrib* findAttribute(const char* name) const;
+    const XNode* findNodeByAttribute(const char* node_name, const char* attrib_name, const char* attrib_value) const;
 };
 
 class XFILE

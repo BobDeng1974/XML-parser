@@ -19,6 +19,11 @@ int main()
     printf("Search for node COLLADA:\n");
     root->findNode("COLLADA")->print();
 
+    // collada-node test:
+    root->findNodeByAttribute("node", "id", NULL)->print();
+    printf("\n\n\n\n\n\n\n\n");
+    printNodeTree(root->findNodeByAttribute("node", "id", "Armature"), 0);
+
     delete root;
     return 0;
 }

@@ -9,6 +9,12 @@ XAttrib::XAttrib(const std::string& str)
     value = str.substr(index + 2, str.substr(index + 2).size() - 1); // copy the value, skip the equal to sign and the 2 quotation marks
 }
 
+XAttrib::XAttrib(const char* _name, const char* _value)
+{
+    this->name = std::string(_name);
+    this->value = std::string(_value);
+}
+
 std::string XAttrib::toString() const {
     return (name + "=\"" + value + "\"");
 }
@@ -23,6 +29,31 @@ const XNode* XNode::_findNode(const char* node_name) const
     for(unsigned int i = 0; i < this->children.size(); i++)
     {
         const XNode* res = this->children.at(i)._findNode(node_name);
+        if(res != NULL) return res;
+    }
+
+    return NULL;
+}
+
+const XNode* XNode::_findNodeByAttribute(const char* node_name, const char* attrib_name, const char* attrib_value) const
+{
+    if(node_name == NULL || strcmp(node_name, this->name.c_str()) == 0)
+    {
+        for(unsigned int i = 0; i < this->attributes.size(); i++)
+        {
+            if(attrib_name == NULL || strcmp(attrib_name, this->attributes.at(i).name.c_str()) == 0)
+            {
+                if(attrib_value == NULL || strcmp(attrib_value, this->attributes.at(i).value.c_str()) == 0)
+                {
+                    return this;
+                }
+            }
+        }
+    }
+
+    for(unsigned int i = 0; i < this->children.size(); i++)
+    {
+        const XNode* res = this->children.at(i)._findNodeByAttribute(node_name, attrib_name, attrib_value);
         if(res != NULL) return res;
     }
 
@@ -62,6 +93,20 @@ const XAttrib* XNode::findAttribute(const char* name) const
 
     printf("Warning: Attribute [%s] not found.", name);
     return NULL;
+}
+
+const XNode* XNode::findNodeByAttribute(const char* node_name, const char* attrib_name, const char* attrib_value) const
+{
+    const XNode* res = this->_findNodeByAttribute(node_name, attrib_name, attrib_value);
+    if(!res) {
+        printf("Warning: Node with ");
+        if(node_name != NULL) printf("name \"%s\" and ", node_name);
+        printf("attribute [");
+        printf("%s=", attrib_name == NULL ? "\"\"" : attrib_name);
+        printf("%s", attrib_value == NULL ? "\"\"" : attrib_value);
+        printf("] not found.\n");
+    }
+    return res;
 }
 
 /************************************************************************************************************************************************/
