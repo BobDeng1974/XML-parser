@@ -9,13 +9,15 @@
 #define XML_NODE 1
 #define XML_VALUE 2
 
-class XAttribute
+class XAttrib
 {
 public:
     std::string name;
     std::string value;
 
-    XAttribute(const std::string& str)
+    XAttrib(){}
+
+    XAttrib(const std::string& str)
     {
         size_t index = str.find('=');
         name = str.substr(0, index); // copy the name from the indices: 0 to the equal to sign's index
@@ -29,12 +31,27 @@ public:
 
 class XNode
 {
+private:
+    const XNode* _findNode(const char* node_name) const
+    {
+        if(strcmp(node_name, this->name.c_str()) == 0)
+            return this;
+
+        for(unsigned int i = 0; i < this->children.size(); i++)
+        {
+            const XNode* res = this->children.at(i)._findNode(node_name);
+            if(res != NULL) return res;
+        }
+
+        return NULL;
+    }
+
 public:
     XNode* parent;
 
     std::string name;
     std::string value;
-    std::vector<XAttribute> attributes;
+    std::vector<XAttrib> attributes;
     std::vector<XNode> children;
 
     XNode()
@@ -42,7 +59,7 @@ public:
         this->parent = NULL;
         this->name = "";
         this->value = "";
-        this->attributes = std::vector<XAttribute>();
+        this->attributes = std::vector<XAttrib>();
         this->children = std::vector<XNode>();
     }
 
@@ -50,15 +67,35 @@ public:
     {
         printf("%s: [%s] ", name.c_str(), value.c_str());
         for(unsigned int i = 0; i < this->attributes.size(); i++)
-            printf("%s ", this->attributes[i].toString().c_str());
+            printf("%s ", this->attributes.at(i).toString().c_str());
         printf("\n");
+    }
+
+    const XNode* findNode(const char* name) const
+    {
+        const XNode* res = this->_findNode(name);
+        if(!res) printf("Warning: Node [%s] not found.", name);
+        return res;
+    }
+
+    const XAttrib* findAttribute(const char* name) const
+    {
+        puts("Find attibute");
+        for(unsigned int i = 0; i < this->attributes.size(); i++)
+        {
+            puts("Attempt:");
+            printf("Try %s vs %s\n", name, this->attributes.at(i).name.c_str());
+            if(strcmp(this->attributes.at(i).name.c_str(), name) == 0) return &this->attributes.at(i);
+        }
+
+        printf("Warning: Attribute [%s] not found.", name);
+        return NULL;
     }
 };
 
 class XFILE
 {
 private:
-    XNode* root; // the root node
     FILE* file; // the file being read
 
     int read(std::string& buffer)
@@ -99,9 +136,12 @@ public:
             printf("XML file [%s] not found!\n", str);
             throw -1;
         }
+    }
 
-        this->root = new XNode();
-        XNode* current = this->root;
+    XNode* read()
+    {
+        XNode* root = new XNode();
+        XNode* current = root;
 
         std::string buffer;
         int ret = 0;
@@ -153,7 +193,7 @@ public:
                     if(token[strlen(token) - 1] == '/') // if the current token ends with a '/', then remove it
                         token[strlen(token) - 1] = '\0';
 
-                    XAttribute attribute = XAttribute(std::string(token));
+                    XAttrib attribute = XAttrib(std::string(token));
                     node.attributes.push_back(attribute);
                 }
 
@@ -163,37 +203,33 @@ public:
                 free(str);
             }
         }
+
+        return root;
     }
 
-    const XNode* getNode() {
-        return this->root; // return the root node
-    }
-
-    void close() {
-        fclose(file);
+    ~XFILE() {
+        fclose(this->file);
     }
 };
 
-// TEST THE FUNCTION:
-/*
 void printNodeTree(const XNode* ptr, unsigned int level)
 {
     if(ptr == NULL) return;
     for(unsigned int i = 0; i < ptr->children.size(); i ++)
     {
         for(unsigned int s = 0; s < level; s++) printf("_");
-        ptr->children[i].print();
-        printNodeTree(&ptr->children[i], level + 1);
+        ptr->children.at(i).print();
+        printNodeTree(&ptr->children.at(i), level + 1);
     }
 }
 
 int main()
 {
-    XFILE xml = XFILE("/Users/Jas/AndroidStudioProjects/MyApplication/app/src/main/assets/models/Bear.dae");
-
-    const XNode* root = xml.getNode();
+    const XNode* root = XFILE("/Users/Jas/AndroidStudioProjects/MyApplication/app/src/main/assets/models/Bear.dae").read();
     printNodeTree(root, 0);
+
+    printf("Search for node COLLADA:\n");
+    root->findNode("COLLADA")->print();
 
     return 0;
 }
-*/
