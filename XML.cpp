@@ -55,11 +55,8 @@ const XNode* XNode::findNode(const char* name) const
 
 const XAttrib* XNode::findAttribute(const char* name) const
 {
-    puts("Find attibute");
     for(unsigned int i = 0; i < this->attributes.size(); i++)
     {
-        puts("Attempt:");
-        printf("Try %s vs %s\n", name, this->attributes.at(i).name.c_str());
         if(strcmp(this->attributes.at(i).name.c_str(), name) == 0) return &this->attributes.at(i);
     }
 
