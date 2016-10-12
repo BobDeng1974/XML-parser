@@ -18,6 +18,7 @@ public:
 
     std::vector<float> toFloatVector() const;
     std::vector<int> toIntegerVector() const;
+    std::vector<std::string> toStringVector() const;
 };
 
 class XAttrib

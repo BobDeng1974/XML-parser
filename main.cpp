@@ -39,6 +39,11 @@ int main()
         printf("%i ", i_array[i]);
     printf("\n");
 
+    std::vector<std::string> s_array = root->getNode("library_controllers").getChild("controller").getChild("skin").getChild("source").getChild("Name_array").value.toStringVector();
+    for(unsigned int i = 0; i < s_array.size(); i++)
+        printf("%s ", s_array[i].c_str());
+    printf("\n");
+
     delete root;
     return 0;
 }

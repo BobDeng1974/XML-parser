@@ -53,6 +53,26 @@ std::vector<int> XValue::toIntegerVector() const
     return array;
 }
 
+std::vector<std::string> XValue::toStringVector() const
+{
+    std::string buffer = "";
+    std::vector<std::string> array;
+
+    for(unsigned int i = 0; i < this->length(); i++)
+    {
+        int acsii = (int) this->at(i);
+        buffer += (char) acsii;
+
+        if(acsii == 32 || i == this->length() - 1)
+        {
+            array.push_back(buffer);
+            buffer.clear();
+        }
+    }
+
+    return array;
+}
+
 /************************************************************************************************************************************************/
 
 XAttrib::XAttrib(){}
