@@ -49,6 +49,7 @@ public:
     XNode();
     void print() const; // print the string representation in the format: name: value ...attributes...
     const XNode& getNode(const char* name) const;
+    const XNode& getChild(const char* name) const;
     const XAttrib& getAttribute(const char* name) const;
     const XNode& getNodeByAttribute(const char* node_name, const char* attrib_name, const char* attrib_value) const;
 };

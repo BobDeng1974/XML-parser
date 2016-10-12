@@ -34,7 +34,7 @@ int main()
     printf("\n");
 
 
-    std::vector<int> i_array = root->getNode("library_animations").getNodeByAttribute("source", "id", "Armature_Bone_pose_matrix-output").getNode("float_array").value.toIntegerVector();
+    std::vector<int> i_array = root->getNode("library_animations").getNodeByAttribute("source", "id", "Armature_Bone_pose_matrix-output").getChild("float_array").value.toIntegerVector();
     for(unsigned int i = 0; i < i_array.size(); i++)
         printf("%i ", i_array[i]);
     printf("\n");

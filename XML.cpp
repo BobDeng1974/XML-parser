@@ -169,6 +169,16 @@ const XNode& XNode::getNodeByAttribute(const char* node_name, const char* attrib
     return *res;
 }
 
+const XNode& XNode::getChild(const char* name) const
+{
+    for(unsigned int i = 0; i < this->children.size(); i++) {
+        if(strcmp(this->children[i].name.c_str(), name) == 0) return this->children[i];
+    }
+
+    printf("Error: Node [%s] not found.\n", name);
+    throw -1;
+}
+
 /************************************************************************************************************************************************/
 
 int XFILE::read(std::string& buffer)
